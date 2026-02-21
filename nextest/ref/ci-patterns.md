@@ -1,6 +1,6 @@
-# CI/CD Patterns for cargo-nextest
+# Continuous Integration/Continuous Delivery (CI/CD) Patterns for cargo-nextest
 
-## Recommended CI Profile
+## Recommended Continuous Integration (CI) Profile
 
 ```toml
 # .config/nextest.toml
@@ -16,7 +16,7 @@ path = "junit.xml"                  # JUnit report for CI tools
 
 ## Partitioning / Sharding
 
-Split large test suites across multiple CI runners.
+Split large test suites across multiple continuous integration (CI) runners.
 
 ### Sliced partitioning (recommended)
 

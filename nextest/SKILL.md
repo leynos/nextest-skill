@@ -1,6 +1,6 @@
 ---
 name: nextest
-description: "Use when running Rust tests with cargo-nextest. Keywords: cargo nextest, nextest, test runner, run tests, test parallelism, test threads, flaky test, retry, slow test, timeout, test group, filterset, test partition, sharding, CI testing, nextest profile, nextest config, .config/nextest.toml, cargo nextest run, cargo nextest list, test archive, JUnit, stress test, miri, test coverage, cargo-mutants, criterion, debugger, tracer"
+description: "Use when running Rust tests with cargo-nextest. Keywords: cargo nextest, nextest, test runner, run tests, test parallelism, test threads, flaky test, retry, slow test, timeout, test group, filterset, test partition, sharding, continuous integration (CI) testing, nextest profile, nextest config, .config/nextest.toml, cargo nextest run, cargo nextest list, test archive, JUnit, stress test, miri, test coverage, cargo-mutants, criterion, debugger, tracer"
 globs: ["**/Cargo.toml", "**/.config/nextest.toml"]
 user-invocable: false
 ---
@@ -198,7 +198,7 @@ slow-timeout = { period = "30s", terminate-after = 1, on-timeout = "pass" }
 
 ---
 
-## Filtersets (DSL)
+## Filtersets (Domain-specific language, DSL)
 
 Specified with `-E` / `--filterset`. Combinable with set operators.
 
@@ -482,7 +482,7 @@ to be selected. Key differences:
 
 ## Integrations
 
-### Miri (undefined behavior detection)
+### Miri (undefined behaviour detection)
 
 ```
 cargo miri nextest run

@@ -1,4 +1,4 @@
-# Filterset DSL Reference
+# Filterset Domain-Specific Language (DSL) Reference
 
 Filtersets are specified with `-E` or `--filterset` on the command line, and
 in configuration (e.g., `filter` in overrides, `default-filter`).
