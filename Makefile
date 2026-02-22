@@ -20,5 +20,6 @@ typecheck:
 test:
 	@test -f nextest/SKILL.md
 	@test -f nextest/ref/ci-patterns.md
+	@test -f nextest/ref/config-reference.md
 	@test -f nextest/ref/filterset-dsl.md
 	@echo "Documentation smoke tests passed."

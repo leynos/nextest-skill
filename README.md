@@ -5,7 +5,8 @@ using `cargo-nextest`, the next-generation test runner for Rust.
 
 ## Installation
 
-Install the skill by copying the `nextest` directory into your agent skills directory:
+Install the skill by copying the `nextest` directory into the agent skills
+directory:
 
 - Codex: `~/.codex/skills`
 - Claude Code: `~/.claude/skills`

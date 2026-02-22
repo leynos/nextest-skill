@@ -58,7 +58,7 @@ Used with `kind()`: `lib`, `test`, `bench`, `proc-macro`, `bin`, `example`.
 
 ## Examples
 
-```
+```text
 # All tests in a crate and its dependencies
 deps(my-crate)
 
@@ -90,7 +90,7 @@ package(=my-app) and kind(test) - test(slow_)
 If both filtersets and substring filters are given, tests must match BOTH:
 the union of filtersets is intersected with the union of substring filters.
 
-```
+```bash
 # Tests in package foo matching either test_bar or test_baz
 cargo nextest run -E 'package(foo)' -- test_bar test_baz
 ```

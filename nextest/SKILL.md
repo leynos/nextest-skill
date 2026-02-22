@@ -16,7 +16,7 @@ results. Custom test harnesses may need adaptation for this model.
 
 ### Running Tests
 
-```
+```bash
 cargo nextest run                          # Run all tests
 cargo nextest run test_name                # Run tests matching substring
 cargo nextest run -p my-crate              # Run tests in a specific package
@@ -31,7 +31,7 @@ cargo nextest run -P ci                    # Use the "ci" profile
 
 ### Listing and Selecting Tests
 
-```
+```bash
 cargo nextest list                         # List all tests
 cargo nextest list -T json-pretty          # List in JSON format
 cargo nextest run -E 'package(my-crate)'   # Filterset: by package
@@ -42,7 +42,7 @@ cargo nextest run -- --skip slow --exact test_foo  # Skip/exact matching
 
 ### CI Essentials
 
-```
+```bash
 cargo nextest run -P ci --no-fail-fast     # CI profile, run all tests
 cargo nextest run --partition slice:1/3    # Shard across 3 runners
 cargo nextest archive --archive-file a.tar.zst  # Archive for reuse
@@ -108,20 +108,13 @@ Profiles provide named sets of options. Select with `-P <name>` or
 `NEXTEST_PROFILE=<name>`.
 
 ```toml
-[profile.default]
-fail-fast = true
-retries = 0
-test-threads = "num-cpus"
-slow-timeout = { period = "60s" }
-
 [profile.ci]
 fail-fast = false
 retries = 2
-failure-output = "immediate-final"
-
-[profile.ci.junit]
-path = "junit.xml"
 ```
+
+For complete profile examples (including `profile.default` and
+`profile.ci.junit` for JUnit output), see `ref/ci-patterns.md`.
 
 Profiles inherit from `default` unless `inherits` is specified.
 
@@ -271,7 +264,7 @@ and CI artifact workflows.
 
 ## Stress Testing
 
-```
+```bash
 cargo nextest run --stress-count 10 test_flaky    # Run 10 times each
 cargo nextest run --stress-count infinite test_x   # Run indefinitely
 cargo nextest run --stress-duration 5m test_x      # Run for 5 minutes
@@ -293,7 +286,7 @@ enabled = true
 
 Then:
 
-```
+```bash
 cargo nextest run                   # Automatically recorded
 cargo nextest run -R latest         # Rerun only failures
 cargo nextest replay                # Replay last run's output
@@ -395,7 +388,7 @@ at the beginning of a test is safe in practice (before spawning threads).
 
 ## Debugger and Tracer Support
 
-```
+```bash
 cargo nextest run --debugger "rust-gdb --args" test_name
 cargo nextest run --debugger "rust-lldb --" test_name
 cargo nextest run --tracer strace test_name
@@ -416,7 +409,7 @@ to be selected. Key differences:
 
 ### Miri (undefined behaviour detection)
 
-```
+```bash
 cargo miri nextest run
 cargo miri nextest run --target mips64-unknown-linux-gnuabi64  # Cross-interpretation
 ```
@@ -435,7 +428,7 @@ under Miri.
 
 ### Test coverage
 
-```
+```bash
 cargo llvm-cov nextest
 ```
 
@@ -449,7 +442,7 @@ cargo llvm-cov report --doctests --lcov --output-path lcov.info
 
 ### Mutation testing (cargo-mutants)
 
-```
+```bash
 cargo mutants --test-tool=nextest
 ```
 
@@ -464,7 +457,7 @@ test_tool = "nextest"
 By default, `cargo nextest run` excludes benchmarks. To verify benchmarks
 compile and don't panic (single iteration, no measurement):
 
-```
+```bash
 cargo nextest run --all-targets   # Include benchmarks
 cargo nextest run --benches       # Only benchmarks
 ```

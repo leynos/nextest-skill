@@ -22,7 +22,7 @@ Split large test suites across multiple continuous integration (CI) runners.
 
 Round-robin across all tests; even distribution.
 
-```
+```bash
 cargo nextest run --partition slice:1/3
 cargo nextest run --partition slice:2/3
 cargo nextest run --partition slice:3/3
@@ -34,12 +34,12 @@ Deterministic bucketing: adding/removing tests doesn't shift other tests
 between buckets. Better for caching, but may be less evenly distributed for
 small test counts.
 
-```
+```bash
 cargo nextest run --partition hash:1/3
 ```
 
 Partitioning applies after all other filters. For example:
-```
+```bash
 cargo nextest run --partition slice:1/3 -E 'package(my-crate)'
 ```
 
