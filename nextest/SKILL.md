@@ -200,43 +200,17 @@ slow-timeout = { period = "30s", terminate-after = 1, on-timeout = "pass" }
 
 ## Filtersets (Domain-specific language, DSL)
 
-Specified with `-E` / `--filterset`. Combinable with set operators.
+Specified with `-E` / `--filterset`. Core concepts:
 
-### Predicates
+- Predicates: `test(...)`, `package(...)`, `deps(...)`, `rdeps(...)`,
+  `kind(...)`, `platform(...)`, `default()`
+- Matchers: exact (`=`), contains (`~`), regex (`/../`), glob (`#`)
+- Operators: `not`/`!`, `and`/`&`/`-`, `or`/`|`/`+` with `()` grouping
+- CLI filtersets intersect with `default-filter` unless
+  `--ignore-default-filter` is set
 
-| Predicate | Matches |
-|-----------|---------|
-| `all()` | All tests |
-| `none()` | No tests |
-| `test(name)` | Tests containing `name` (default: substring) |
-| `test(/regex/)` | Tests matching regex |
-| `package(glob)` | Tests in packages matching glob |
-| `deps(glob)` | Package + transitive deps |
-| `rdeps(glob)` | Package + reverse transitive deps |
-| `binary(glob)` | By binary name |
-| `binary_id(glob)` | By binary ID |
-| `kind(lib\|test\|bench\|proc-macro\|bin\|example)` | By binary kind |
-| `platform(host\|target)` | By build platform |
-| `default()` | The configured default filter |
-
-### Name matchers
-
-| Prefix | Meaning | Example |
-|--------|---------|---------|
-| (none) | Default for predicate | `test(foo)` = contains |
-| `=` | Exact match | `test(=my::test)` |
-| `~` | Contains | `package(~serde)` |
-| `/regex/` | Regex (any part) | `test(/^init_/)` |
-| `#` | Glob | `package(#my-*)` |
-
-### Operators (precedence high to low)
-
-`()` > `not`/`!` > `and`/`&`/`-` > `or`/`|`/`+`
-
-### Interaction with default filter
-
-CLI filtersets are intersected with `default-filter`. Override with
-`--ignore-default-filter`.
+See `ref/filterset-dsl.md` for the complete predicate table, matcher rules,
+operator precedence, escape sequences, and advanced examples.
 
 ---
 
@@ -264,76 +238,34 @@ When running inside an agent sandbox (constrained CPU/memory):
 - Use `--show-progress=counter` for non-interactive output
 - Set `NEXTEST_NO_INPUT_HANDLER=1` to disable terminal key handling
 
-### GitHub CI configuration
+### Continuous integration (CI) workflow overview
 
-```toml
-[profile.ci]
-fail-fast = false
-retries = 2
-failure-output = "immediate-final"
-slow-timeout = { period = "120s", terminate-after = 5 }
+For production-ready profile config, sharding strategies, build/run split
+archives, and full GitHub/GitLab examples, see `ref/ci-patterns.md`.
 
-[profile.ci.junit]
-path = "junit.xml"
-```
-
-For sharding across matrix jobs:
-
-```yaml
-strategy:
-  matrix:
-    partition: [1, 2, 3]
-steps:
-  - run: cargo nextest run -P ci --partition slice:${{ matrix.partition }}/3
-```
-
-For build/run split:
-
-```yaml
-jobs:
-  build:
-    steps:
-      - run: cargo nextest archive --archive-file tests.tar.zst
-      - uses: actions/upload-artifact@v4
-        with: { name: nextest-archive, path: tests.tar.zst }
-  test:
-    needs: build
-    strategy:
-      matrix:
-        partition: [1, 2, 3]
-    steps:
-      - uses: actions/download-artifact@v4
-        with: { name: nextest-archive }
-      - run: cargo nextest run --archive-file tests.tar.zst --partition slice:${{ matrix.partition }}/3
+```bash
+cargo nextest run -P ci
+cargo nextest run -P ci --partition slice:1/3
+cargo nextest archive --workspace --archive-file tests.tar.zst
+cargo nextest run --archive-file tests.tar.zst --partition slice:1/3
 ```
 
 ---
 
 ## Archiving and Reusing Builds
 
-Build once, run anywhere (same platform):
+Build once and run on multiple machines (same platform and source revision):
 
-```
+```bash
 cargo nextest archive --archive-file tests.tar.zst
 cargo nextest run --archive-file tests.tar.zst
 ```
 
-The archive contains test binaries, dynamic libraries, build script outputs,
-and metadata. Source code is NOT included; it must be checked out at the same
-revision on the target machine.
+Use `--workspace-remap <path>` when the checkout path differs on the target
+machine.
 
-Use `--workspace-remap <path>` if the workspace is at a different path on the
-target machine.
-
-Include extra files:
-
-```toml
-[profile.default]
-archive.include = [
-    { path = "fixtures", relative-to = "target" },
-    { path = "data.json", relative-to = "target", on-missing = "error" },
-]
-```
+See `ref/ci-patterns.md` for full archive patterns, include/exclude options,
+and CI artifact workflows.
 
 ---
 
